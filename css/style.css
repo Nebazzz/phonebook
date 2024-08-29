@@ -47,7 +47,15 @@ body {
   margin-bottom: 30px;
 }
 
+.btn-edit {
+  border: none;
+  background-color: inherit;
+}
 
+.btn-edit-icon {
+  width: 20px;
+  height: 20px;
+}
 
 .form {
   padding: 30px 50px;
