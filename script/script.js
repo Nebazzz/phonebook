@@ -196,6 +196,7 @@ const data = [
       logo,
       btnAdd: buttonGroup.btns[0],
       formOverlay: form.overlay,
+      form: form.form,
     };
   };
 
@@ -258,20 +259,30 @@ const data = [
     const app = document.querySelector(selectorApp);
     const phoneBook = renderPhoneBook(app, title);
 
-    const {list, logo, btnAdd, formOverlay} = phoneBook;
+    const {list, logo, btnAdd, formOverlay, form} = phoneBook;
 
     // Функионал
     const allRow = renderContacts(list, data);
 
     hoverRow(allRow, logo);
 
-    const objEvent = {
-      handleEvent() {
-        formOverlay.classList.add('is-visible');
-        },
-      };
+    const closeModalButton = document.querySelector('.close');
 
-    btnAdd.addEventListener('click', objEvent);
+    btnAdd.addEventListener('click', () => {
+      formOverlay.classList.add('is-visible');
+    });
+
+    closeModalButton.addEventListener('click', () => {
+      formOverlay.classList.remove('is-visible');
+    });
+
+    form.addEventListener('click', event => {
+      event.stopPropagation('is-visible');
+    });
+
+    formOverlay.addEventListener('click', () => {
+      formOverlay.classList.remove('is-visible');
+    });
   };
 
   window.phoneBookInit = init;
