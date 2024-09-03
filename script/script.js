@@ -88,8 +88,8 @@ const data = [
     thead.insertAdjacentHTML('beforeend', `
       <tr>
         <th class="delete">Удалить</th>
-        <th>Имя</th>
-        <th>Фамилия</th>
+        <th class="thead__name" data-sort="name">Имя</th>
+        <th class="thead__name" data-sort="surname">Фамилия</th>
         <th>Телефон</th>
         <th></th>
       </tr>
@@ -113,17 +113,17 @@ const data = [
       <button class="close" type="button"></button>
       <h2 class="form-title">Добавить контакт</h2>
       <div class="form-group">
-        <label class="form-label" for"name">Имя:</label>
+        <label class="form-label" for="name">Имя:</label>
         <input class="form-input" name="name" 
         id="name" type="text" required>
       </div>
       <div class="form-group">
-        <label class="form-label" for"surname">Фамилия:</label>
+        <label class="form-label" for="surname">Фамилия:</label>
         <input class="form-input" name="surname" 
         id="surname" type="text" required>
       </div>
       <div class="form-group">
-        <label class="form-label" for"phone">Телефон:</label>
+        <label class="form-label" for="phone">Телефон:</label>
         <input class="form-input" name="phone" 
         id="phone" type="number" required>
       </div>
@@ -198,6 +198,7 @@ const data = [
       btnDel: buttonGroup.btns[1],
       formOverlay: form.overlay,
       form: form.form,
+      table,
     };
   };
 
@@ -239,6 +240,7 @@ const data = [
   };
 
   const renderContacts = (elem, data) => {
+    elem.innerHTML = '';
     const allRow = data.map(createRow);
     elem.append(...allRow);
     return allRow;
@@ -266,8 +268,8 @@ const data = [
       logo,
       btnAdd,
       formOverlay,
-      form,
       btnDel,
+      table,
     } = phoneBook;
 
     // Функионал
@@ -300,15 +302,20 @@ const data = [
       }
     });
 
-  //   setTimeout(() => {
-  //     const contact = createRow({
-  //       name: 'Евгений',
-  //       surname: 'Небальзин',
-  //       phone: '+79996669999',
-  //     });
-  //     list.append(contact);
-  //   }, 2000);
-  // };
+    const sortTable = (target) => {
+      const sortKey = target.dataset.sort;
+      data.sort((a, b) => a[sortKey].localeCompare(b[sortKey]));
+      const allRow = renderContacts(document.querySelector('.table tbody'), data);
+      hoverRow(allRow, document.querySelector('.logo'));
+    };
+
+    table.querySelector('thead').addEventListener('click', e => {
+      const target = e.target;
+      if (target.classList.contains('thead__name')) {
+        sortTable(target);
+      }
+    });
+  };
 
   window.phoneBookInit = init;
 }
