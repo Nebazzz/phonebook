@@ -26,7 +26,23 @@ const data = [
 {
   const addContactData = contact => {
     data.push(contact);
-    console.log('data', data);
+  };
+
+  const getStorage = (key) => {
+    const data = localStorage.getItem(key);
+    return data ? JSON.parse(data) : [];
+  };
+
+  const setStorage = (key, newContact) => {
+    const contacts = getStorage(key);
+    contacts.push(newContact);
+    localStorage.setItem(key, JSON.stringify(contacts));
+  };
+
+  const removeStorage = (phone) => {
+    let contacts = getStorage('contacts');
+    contacts = contacts.filter(contact => contact.phone !== phone);
+    localStorage.setItem('contacts', JSON.stringify(contacts));
   };
 
   const createContainer = () => {
@@ -299,7 +315,10 @@ const data = [
     list.addEventListener('click', e => {
       const target = e.target;
       if (target.closest('.del-icon')) {
-        target.closest('.contact').remove();
+        const contact = target.closest('.contact');
+        const phone = contact.querySelector('a').textContent;
+        removeStorage(phone.trim());
+        contact.remove();
       }
     });
   };
@@ -316,6 +335,7 @@ const data = [
       const newContact = Object.fromEntries(formData);
 
       addContactData(newContact);
+      setStorage('contacts', newContact);
       addContactPage(newContact, list);
       form.reset();
       closeModal();
@@ -336,19 +356,39 @@ const data = [
     } = renderPhoneBook(app, title);
 
     // Функионал
-    const allRow = renderContacts(list, data);
+    const storedContacts = getStorage('contacts');
+    const allContacts = [...data, ...storedContacts];
+    const allRow = renderContacts(list, allContacts);
     const {closeModal} = modalControl(btnAdd, formOverlay);
 
     hoverRow(allRow, logo);
     deleteControl(btnDel, list);
     formControl(form, list, closeModal);
 
+    const saveSortKeyToStorage = (sortKey) => {
+      localStorage.setItem('sortKey', sortKey);
+    };
+
+    const sortContacts = (sortKey) => {
+      allContacts.sort((a, b) => a[sortKey].localeCompare(b[sortKey]));
+      const allRow = renderContacts(list, allContacts);
+      hoverRow(allRow, logo);
+    };
+
     const sortTable = (target) => {
       const sortKey = target.dataset.sort;
-      data.sort((a, b) => a[sortKey].localeCompare(b[sortKey]));
-      const allRow = renderContacts(document.querySelector('.table tbody'), data);
-      hoverRow(allRow, document.querySelector('.logo'));
+      sortContacts(sortKey);
+      saveSortKeyToStorage(sortKey);
     };
+
+    const applySortFromStorage = () => {
+      const sortKey = localStorage.getItem('sortKey');
+      if (sortKey) {
+        sortContacts(sortKey);
+      }
+    };
+
+    applySortFromStorage();
 
     table.querySelector('thead').addEventListener('click', e => {
       const target = e.target;
