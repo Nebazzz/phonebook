@@ -1,33 +1,8 @@
 'use strict';
 
-const data = [
-  {
-    name: 'Иван',
-    surname: 'Петров',
-    phone: '+79514545454',
-  },
-  {
-    name: 'Игорь',
-    surname: 'Семёнов',
-    phone: '+79999999999',
-  },
-  {
-    name: 'Семён',
-    surname: 'Иванов',
-    phone: '+79800252525',
-  },
-  {
-    name: 'Мария',
-    surname: 'Попова',
-    phone: '+79876543210',
-  },
-];
+const data = [];
 
 {
-  const addContactData = contact => {
-    data.push(contact);
-  };
-
   const getStorage = (key) => {
     const data = localStorage.getItem(key);
     return data ? JSON.parse(data) : [];
@@ -281,7 +256,6 @@ const data = [
   };
 
   const modalControl = (btnAdd, formOverlay) => {
-
     const openModal = () => {
       formOverlay.classList.add('is-visible');
     };
@@ -327,15 +301,20 @@ const data = [
     list.append(createRow(contact));
   };
 
-  const formControl = (form, list, closeModal) => {
+  const formControl = (form, list, closeModal, allContacts) => {
     form.addEventListener('submit', e => {
       e.preventDefault();
       const formData = new FormData(e.target);
 
       const newContact = Object.fromEntries(formData);
 
+      const addContactData = contact => {
+        data.push(contact);
+        setStorage('contacts', contact);
+        allContacts.push(contact);
+      };
+
       addContactData(newContact);
-      setStorage('contacts', newContact);
       addContactPage(newContact, list);
       form.reset();
       closeModal();
@@ -363,7 +342,7 @@ const data = [
 
     hoverRow(allRow, logo);
     deleteControl(btnDel, list);
-    formControl(form, list, closeModal);
+    formControl(form, list, closeModal, allContacts);
 
     const saveSortKeyToStorage = (sortKey) => {
       localStorage.setItem('sortKey', sortKey);
@@ -371,8 +350,9 @@ const data = [
 
     const sortContacts = (sortKey) => {
       allContacts.sort((a, b) => a[sortKey].localeCompare(b[sortKey]));
-      const allRow = renderContacts(list, allContacts);
-      hoverRow(allRow, logo);
+      const newAllRow = renderContacts(list, allContacts);
+      hoverRow(newAllRow, logo);
+      return newAllRow;
     };
 
     const sortTable = (target) => {
