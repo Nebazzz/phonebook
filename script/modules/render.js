@@ -1,21 +1,21 @@
-import createElements from './createElements.js';
+import * as createElements from './createElements.js';
 
-const {
-  createHeader,
-  createLogo,
-  createMain,
-  createButtonsGroup,
-  createTable,
-  createForm,
-  createFooter,
-  createRow,
-} = createElements;
+// const {
+//   createHeader,
+//   createLogo,
+//   createMain,
+//   createButtonsGroup,
+//   createTable,
+//   createForm,
+//   createFooter,
+//   createRow,
+// } = createElements;
 
-const renderPhoneBook = (app, title) => {
-  const header = createHeader();
-  const logo = createLogo(title);
-  const main = createMain();
-  const buttonGroup = createButtonsGroup([
+export const renderPhoneBook = (app, title) => {
+  const header = createElements.createHeader();
+  const logo = createElements.createLogo(title);
+  const main = createElements.createMain();
+  const buttonGroup = createElements.createButtonsGroup([
     {
       className: 'btn btn-primary mr-3',
       type: 'button',
@@ -27,9 +27,9 @@ const renderPhoneBook = (app, title) => {
       text: 'Удалить',
     },
   ]);
-  const table = createTable();
-  const {form, overlay} = createForm();
-  const footer = createFooter(title);
+  const table = createElements.createTable();
+  const {form, overlay} = createElements.createForm();
+  const footer = createElements.createFooter(title);
 
   header.headerContainer.append(logo);
   main.mainContainer.append(buttonGroup.btnWrapper, table, overlay);
@@ -46,14 +46,9 @@ const renderPhoneBook = (app, title) => {
   };
 };
 
-const renderContacts = (elem, data) => {
+export const renderContacts = (elem, data) => {
   elem.innerHTML = '';
-  const allRow = data.map(createRow);
+  const allRow = data.map(createElements.createRow);
   elem.append(...allRow);
   return allRow;
-};
-
-export default {
-  renderPhoneBook,
-  renderContacts,
 };

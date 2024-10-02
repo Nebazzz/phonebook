@@ -1,5 +1,5 @@
 import control from './modules/control.js';
-import render from './modules/render.js';
+import {renderPhoneBook, renderContacts} from './modules/render.js';
 import serviceStorage from './modules/serviceStorage.js';
 
 const data = [];
@@ -10,11 +10,6 @@ const {
   deleteControl,
   formControl,
 } = control;
-
-const {
-  renderPhoneBook,
-  renderContacts,
-} = render;
 
 const {
   getStorage,
@@ -80,4 +75,4 @@ const init = (selectorApp, title) => {
 
 window.phoneBookInit = init;
 
-export { init };
+export {init};
