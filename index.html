@@ -12,9 +12,8 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.1/css/bootstrap.min.css">
   <link rel="stylesheet" href="css/style.css">
 
-  <script type="module" src="script/script.js" defer></script>
-
-  <script>
+  <script type="module">
+    import { init } from './script/script.js';
     document.addEventListener('DOMContentLoaded', () => {
       phoneBookInit('#app', 'Евгений');
     });

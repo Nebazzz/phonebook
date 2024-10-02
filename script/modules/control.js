@@ -90,7 +90,7 @@ const formControl = (form, list, closeModal, allContacts) => {
 };
 
 export default {
-  hoverRow
+  hoverRow,
   modalControl,
   deleteControl,
   formControl,
